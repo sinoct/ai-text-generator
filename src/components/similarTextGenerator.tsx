@@ -4,7 +4,8 @@ import * as xlsx from "xlsx";
 import { BarLoader } from "react-spinners";
 
 const SimilatTextGenerator: FunctionComponent = () => {
-  const [copies, setCopies] = useState(1);
+  const [copies, setCopies] = useState(5);
+  const [fileName, setFileName] = useState("table");
   const [excel, setExcel] = useState({});
   const [loader, setLoader] = useState(false);
   const [progress, setProgress] = useState({ current: 0, from: 0 });
@@ -14,11 +15,14 @@ const SimilatTextGenerator: FunctionComponent = () => {
   const copiesChangeHandler = (newText: any) => {
     setCopies(newText.target.value);
   };
+  const fileNameChangeHandler = (newText: any) => {
+    setFileName(newText.target.value);
+  };
 
   const generateVariations = async () => {
+    setDownloadReady(false);
     setLoader(true);
     const json = await generateTextFromExcel(excel, copies, setProgress);
-    console.log(json);
     setLoader(false);
     setDownloadExcel(json);
     setDownloadReady(true);
@@ -46,18 +50,7 @@ const SimilatTextGenerator: FunctionComponent = () => {
     const worksheet = xlsx.utils.json_to_sheet(json);
     const workbook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    xlsx.writeFile(workbook, "DataSheet.xlsx");
-  };
-
-  const exportData = (json: any) => {
-    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-      JSON.stringify(json)
-    )}`;
-    const link = document.createElement("a");
-    link.href = jsonString;
-    link.download = "data.json";
-
-    link.click();
+    xlsx.writeFile(workbook, `${fileName}.xlsx`);
   };
 
   return (
@@ -82,13 +75,23 @@ const SimilatTextGenerator: FunctionComponent = () => {
         <div className="flex gap-4 items-center">
           <label htmlFor="width"> Number of Copies</label>
           <input
-            className="p-1 text-center"
+            className="p-1 text-center rounded"
             type="number"
             max="5"
             min="0"
             value={copies}
             name="width"
             onInput={copiesChangeHandler}
+          />
+        </div>
+
+        <div className="flex gap-4 items-center">
+          <label htmlFor="width"> File Name: </label>
+          <input
+            className="p-1 text-center rounded"
+            value={fileName}
+            name="width"
+            onInput={fileNameChangeHandler}
           />
         </div>
 
@@ -106,14 +109,14 @@ const SimilatTextGenerator: FunctionComponent = () => {
           Create similar text
         </button>
       </div>
-      <div>
-        <BarLoader color="#36d7b7" loading={loader} />
-        {loader && (
+      {loader && (
+        <div className="flex justify-center items-center gap-4 p-4">
+          <BarLoader color="#36d7b7" loading={loader} />
           <div>
             {progress.current}/{progress.from}
           </div>
-        )}
-      </div>
+        </div>
+      )}
       {downloadReady && (
         <div className="flex justify-center">
           <button

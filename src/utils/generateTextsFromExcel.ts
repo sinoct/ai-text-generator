@@ -11,25 +11,29 @@ export const generateTextFromExcel = async (
     }>
   >
 ) => {
-  //   excel.map((item: any, index: any) => {
-  //     console.log(item);
-  //   });
-  let json = [];
-  for (let i = 0; i < 1; i++) {
-    updateProgress({ current: i, from: excel.length });
-    try {
-      const generated = await generateTexts(excel[i]["Rövid Leírás"], count);
-      let updated = excel[i];
-      const choices = generated.data.choices;
-      updated["TR"] = choices[0].text || "";
-      updated["TD"] = choices[1].text || "";
-      updated["TV"] = choices[2].text || "";
-      updated["TS"] = choices[3].text || "";
-      updated["PR"] = choices[4].text || "";
-      json.push(updated);
-    } catch (error) {
-      json.push(excel[i]);
-    }
-  }
+  let progress = 0;
+  let json: any[] = [];
+  updateProgress({ current: progress, from: excel.length });
+  await Promise.all(
+    excel.map(async (item: any, index: any) => {
+      try {
+        const generated = await generateTexts(item["Rövid Leírás"], count);
+        let updated = item;
+        const choices = generated.data.choices;
+        updated["TR"] = choices[0].text || "";
+        updated["TD"] = choices[1].text || "";
+        updated["TV"] = choices[2].text || "";
+        updated["TS"] = choices[3].text || "";
+        updated["PR"] = choices[4].text || "";
+        json[index] = updated;
+        progress += 1;
+        updateProgress({ current: progress, from: excel.length });
+      } catch (error) {
+        json[index] = item;
+        progress += 1;
+        updateProgress({ current: progress, from: excel.length });
+      }
+    })
+  );
   return json;
 };
