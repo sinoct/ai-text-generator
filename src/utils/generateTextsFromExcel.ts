@@ -15,7 +15,7 @@ export const generateTextFromExcel = async (
   //     console.log(item);
   //   });
   let json = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 1; i++) {
     updateProgress({ current: i, from: excel.length });
     try {
       const generated = await generateTexts(excel[i]["Rövid Leírás"], count);
@@ -27,7 +27,6 @@ export const generateTextFromExcel = async (
       updated["TS"] = choices[3].text || "";
       updated["PR"] = choices[4].text || "";
       json.push(updated);
-      console.log(generated.data.choices);
     } catch (error) {
       json.push(excel[i]);
     }

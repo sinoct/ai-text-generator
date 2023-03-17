@@ -1,9 +1,7 @@
 import { FunctionComponent, useState } from "react";
-import { generateTexts } from "@/utils/similarTextGenerator";
 import { generateTextFromExcel } from "@/utils/generateTextsFromExcel";
 import * as xlsx from "xlsx";
 import { BarLoader } from "react-spinners";
-import ExcelDownloader from "./excelDownloader";
 
 const SimilatTextGenerator: FunctionComponent = () => {
   const [copies, setCopies] = useState(1);
@@ -11,6 +9,7 @@ const SimilatTextGenerator: FunctionComponent = () => {
   const [loader, setLoader] = useState(false);
   const [progress, setProgress] = useState({ current: 0, from: 0 });
   const [downloadExcel, setDownloadExcel] = useState({});
+  const [downloadReady, setDownloadReady] = useState(false);
 
   const copiesChangeHandler = (newText: any) => {
     setCopies(newText.target.value);
@@ -22,6 +21,7 @@ const SimilatTextGenerator: FunctionComponent = () => {
     console.log(json);
     setLoader(false);
     setDownloadExcel(json);
+    setDownloadReady(true);
   };
 
   const readUploadFile = (e: any) => {
@@ -62,10 +62,16 @@ const SimilatTextGenerator: FunctionComponent = () => {
 
   return (
     <div>
-      <div className="flex gap-8 items-center">
-        <div>
-          <label htmlFor="upload">Upload File</label>
+      <div className="flex gap-8 items-center justify-center">
+        <div className="flex gap-4 items-center py-8">
+          <label
+            className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white w-full basis-1/2"
+            htmlFor="upload"
+          >
+            Upload File:
+          </label>
           <input
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
             type="file"
             name="upload"
             id="upload"
@@ -73,9 +79,10 @@ const SimilatTextGenerator: FunctionComponent = () => {
           />
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
           <label htmlFor="width"> Number of Copies</label>
           <input
+            className="p-1 text-center"
             type="number"
             max="5"
             min="0"
@@ -107,12 +114,16 @@ const SimilatTextGenerator: FunctionComponent = () => {
           </div>
         )}
       </div>
-      <button
-        className="bg-blue-700 hover:bg-blue-500 p-4 rounded"
-        onClick={() => exportData(downloadExcel)}
-      >
-        Download
-      </button>
+      {downloadReady && (
+        <div className="flex justify-center">
+          <button
+            className="bg-blue-700 hover:bg-blue-500 p-4 rounded"
+            onClick={() => convertToJson(downloadExcel)}
+          >
+            Download
+          </button>
+        </div>
+      )}
     </div>
   );
 };

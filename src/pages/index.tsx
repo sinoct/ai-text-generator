@@ -16,7 +16,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="p-4">
-        <div className="text-3xl flex justify-center">
+        <div className="text-3xl flex justify-center py-8">
           {" "}
           Similar Text Generator{" "}
         </div>
