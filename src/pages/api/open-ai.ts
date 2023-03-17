@@ -15,6 +15,7 @@ export const createEdits = async (
       input,
       instruction,
       n: Number(copies),
+      temperature: 0.2,
     },
     {
       headers: {
