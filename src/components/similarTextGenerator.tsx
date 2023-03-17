@@ -54,9 +54,9 @@ const SimilatTextGenerator: FunctionComponent = () => {
   };
 
   return (
-    <div>
-      <div className="flex gap-8 items-center justify-center">
-        <div className="flex gap-4 items-center py-8">
+    <div className="flex flex-col gap-16 md:gap-0 md:flex-row justify-center w-full">
+      <div className="flex flex-col lg:flex-col gap-4 items-center justify-center basis-1/2">
+        <div className="flex flex-col md:flex-row gap-4 items-center">
           <label
             className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white w-full basis-1/2"
             htmlFor="upload"
@@ -75,7 +75,7 @@ const SimilatTextGenerator: FunctionComponent = () => {
         <div className="flex gap-4 items-center">
           <label htmlFor="width"> Number of Copies</label>
           <input
-            className="p-1 text-center rounded"
+            className="p-1 text-center rounded w-[64px]"
             type="number"
             max="5"
             min="0"
@@ -95,38 +95,42 @@ const SimilatTextGenerator: FunctionComponent = () => {
           />
         </div>
 
-        <button
-          className={`bg-blue-700 hover:bg-blue-500 p-4 rounded ${
-            Object.keys(excel).length === 0
-              ? "bg-gray-500 hover:bg-gray-500  cursor-not-allowed"
-              : ""
-          } ${loader ? "bg-gray-500 cursor-wait" : ""}`}
-          onClick={() => {
-            if (Object.keys(excel).length !== 0 || !loader)
-              generateVariations();
-          }}
-        >
-          Create similar text
-        </button>
-      </div>
-      {loader && (
-        <div className="flex justify-center items-center gap-4 p-4">
-          <BarLoader color="#36d7b7" loading={loader} />
-          <div>
-            {progress.current}/{progress.from}
-          </div>
-        </div>
-      )}
-      {downloadReady && (
-        <div className="flex justify-center">
+        <div className="flex pt-0 md:pt-16">
           <button
-            className="bg-blue-700 hover:bg-blue-500 p-4 rounded"
-            onClick={() => convertToJson(downloadExcel)}
+            className={`bg-blue-700 hover:bg-blue-500 p-4 rounded ${
+              Object.keys(excel).length === 0
+                ? "bg-gray-500 hover:bg-gray-500  cursor-not-allowed"
+                : ""
+            } ${loader ? "bg-gray-500 cursor-wait" : ""}`}
+            onClick={() => {
+              if (Object.keys(excel).length !== 0 || !loader)
+                generateVariations();
+            }}
           >
-            Download
+            Create similar text
           </button>
         </div>
-      )}
+      </div>
+      <div className="flex justify-center itmes-center basis-1/2 w-full">
+        {loader && (
+          <div className="flex justify-center items-center gap-4 p-4">
+            <BarLoader color="#36d7b7" loading={loader} />
+            <div>
+              {progress.current}/{progress.from}
+            </div>
+          </div>
+        )}
+        {downloadReady && (
+          <div className="flex justify-center items-center">
+            <button
+              className="bg-blue-700 hover:bg-blue-500 p-4 rounded h-24"
+              onClick={() => convertToJson(downloadExcel)}
+            >
+              Download
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
