@@ -3,10 +3,16 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import SimilatTextGenerator from "@/components/similarTextGenerator";
+import { GetServerSideProps, NextPage } from "next";
+import { getModels } from "./api/open-ai";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+interface HomeProps {
+  models: any;
+}
+
+const Home: NextPage<HomeProps> = ({ models }) => {
   return (
     <>
       <Head>
@@ -25,4 +31,15 @@ export default function Home() {
       </div>
     </>
   );
-}
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res = await getModels();
+  return {
+    props: {
+      models: res,
+    },
+  };
+};
+
+export default Home;

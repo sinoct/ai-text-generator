@@ -5,6 +5,7 @@ import { BarLoader } from "react-spinners";
 
 const SimilatTextGenerator: FunctionComponent = () => {
   const [copies, setCopies] = useState(5);
+  const [random, setRandom] = useState(1);
   const [fileName, setFileName] = useState("table");
   const [excel, setExcel] = useState({});
   const [loader, setLoader] = useState(false);
@@ -19,10 +20,19 @@ const SimilatTextGenerator: FunctionComponent = () => {
     setFileName(newText.target.value);
   };
 
+  const randomChangeHandler = (newText: any) => {
+    setRandom(newText.target.value);
+  };
+
   const generateVariations = async () => {
     setDownloadReady(false);
     setLoader(true);
-    const json = await generateTextFromExcel(excel, copies, setProgress);
+    const json = await generateTextFromExcel(
+      excel,
+      copies,
+      random,
+      setProgress
+    );
     setLoader(false);
     setDownloadExcel(json);
     setDownloadReady(true);
@@ -82,6 +92,20 @@ const SimilatTextGenerator: FunctionComponent = () => {
             value={copies}
             name="width"
             onInput={copiesChangeHandler}
+          />
+        </div>
+
+        <div className="flex gap-4 items-center">
+          <label htmlFor="width"> Random factor</label>
+          <input
+            className="p-1 text-center rounded w-[64px]"
+            type="number"
+            max="2"
+            min="0"
+            step="0.1"
+            value={random}
+            name="width"
+            onInput={randomChangeHandler}
           />
         </div>
 

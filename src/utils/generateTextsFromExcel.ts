@@ -4,6 +4,7 @@ import { generateTexts } from "./similarTextGenerator";
 export const generateTextFromExcel = async (
   excel: any,
   count: number,
+  random: number,
   updateProgress: Dispatch<
     SetStateAction<{
       current: number;
@@ -17,7 +18,11 @@ export const generateTextFromExcel = async (
   await Promise.all(
     excel.map(async (item: any, index: any) => {
       try {
-        const generated = await generateTexts(item["Rövid Leírás"], count);
+        const generated = await generateTexts(
+          item["Rövid Leírás"],
+          count,
+          random
+        );
         let updated = item;
         const choices = generated.data.choices;
         updated["TR"] = choices[0].text || "";
