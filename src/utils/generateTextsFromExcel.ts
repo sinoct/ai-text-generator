@@ -10,7 +10,9 @@ export const generateTextFromExcel = async (
       current: number;
       from: number;
     }>
-  >
+  >,
+  instruction: string,
+  excelFieldName: string
 ) => {
   let progress = 0;
   let json: any[] = [];
@@ -18,7 +20,7 @@ export const generateTextFromExcel = async (
   await Promise.all(
     excel.map(async (item: any, index: any) => {
       try {
-        let fieldName = "Rövid Leírás";
+        let fieldName = excelFieldName;
         const keys = Object.keys(item);
         for (let i = 0; i < keys.length; i++) {
           if (
@@ -29,14 +31,17 @@ export const generateTextFromExcel = async (
             break;
           }
         }
-        const generated = await generateTexts(item[fieldName], count, random);
+        const generated = await generateTexts(
+          item[fieldName],
+          count,
+          random,
+          instruction
+        );
         let updated = item;
         const choices = generated.data.choices;
-        updated["TR"] = choices[0].message?.content || "";
-        updated["TD"] = choices[1].message?.content || "";
-        updated["TV"] = choices[2].message?.content || "";
-        updated["TS"] = choices[3].message?.content || "";
-        updated["PR"] = choices[4].message?.content || "";
+        for (let i = 0; i < count; i++) {
+          updated[`variant-${i + 1}`] = choices[i].message?.content || "";
+        }
         json[index] = updated;
         progress += 1;
         updateProgress({ current: progress, from: excel.length });

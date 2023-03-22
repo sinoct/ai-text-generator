@@ -7,6 +7,11 @@ const SimilatTextGenerator: FunctionComponent = () => {
   const [copies, setCopies] = useState(5);
   const [random, setRandom] = useState(1);
   const [fileName, setFileName] = useState("table");
+  const [instruction, setInstruction] = useState(
+    "Fogalmazd át a termék leírást"
+  );
+  const [descriptionFieldName, setdescriptionFieldName] =
+    useState("Rövid Leírás");
   const [excel, setExcel] = useState({});
   const [loader, setLoader] = useState(false);
   const [progress, setProgress] = useState({ current: 0, from: 0 });
@@ -16,8 +21,17 @@ const SimilatTextGenerator: FunctionComponent = () => {
   const copiesChangeHandler = (newText: any) => {
     setCopies(newText.target.value);
   };
+
   const fileNameChangeHandler = (newText: any) => {
     setFileName(newText.target.value);
+  };
+
+  const descriptionFieldChangeHandler = (newText: any) => {
+    setdescriptionFieldName(newText.target.value);
+  };
+
+  const instructionChangeHandler = (newText: any) => {
+    setInstruction(newText.target.value);
   };
 
   const randomChangeHandler = (newText: any) => {
@@ -31,7 +45,9 @@ const SimilatTextGenerator: FunctionComponent = () => {
       excel,
       copies,
       random,
-      setProgress
+      setProgress,
+      instruction,
+      descriptionFieldName
     );
     setLoader(false);
     setDownloadExcel(json);
@@ -65,7 +81,7 @@ const SimilatTextGenerator: FunctionComponent = () => {
 
   return (
     <div className="flex flex-col gap-16 md:gap-0 md:flex-row justify-center w-full">
-      <div className="flex flex-col lg:flex-col gap-4 items-center justify-center basis-1/2">
+      <div className="flex flex-col lg:flex-col gap-8 sm:gap-4 items-center justify-center basis-1/2">
         <div className="flex flex-col md:flex-row gap-4 items-center">
           <label
             className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white w-full basis-1/2"
@@ -82,21 +98,20 @@ const SimilatTextGenerator: FunctionComponent = () => {
           />
         </div>
 
-        <div className="flex gap-4 items-center">
-          <label htmlFor="width"> Number of Copies</label>
+        <div className="flex flex-col sm:flex-row  gap-4 items-center">
+          <label htmlFor="copies"> Number of Copies</label>
           <input
             className="p-1 text-center rounded w-[64px]"
             type="number"
-            max="5"
             min="0"
             value={copies}
-            name="width"
+            name="copies"
             onInput={copiesChangeHandler}
           />
         </div>
 
-        <div className="flex gap-4 items-center">
-          <label htmlFor="width"> Random factor</label>
+        <div className="flex flex-col sm:flex-row  gap-4 items-center">
+          <label htmlFor="random"> Random factor</label>
           <input
             className="p-1 text-center rounded w-[64px]"
             type="number"
@@ -104,18 +119,38 @@ const SimilatTextGenerator: FunctionComponent = () => {
             min="0"
             step="0.1"
             value={random}
-            name="width"
+            name="random"
             onInput={randomChangeHandler}
           />
         </div>
 
-        <div className="flex gap-4 items-center">
-          <label htmlFor="width"> File Name: </label>
+        <div className="flex flex-col sm:flex-row gap-4 items-center">
+          <label htmlFor="descField"> Name of Description field: </label>
           <input
             className="p-1 text-center rounded"
+            value={descriptionFieldName}
+            name="descField"
+            onInput={descriptionFieldChangeHandler}
+          />
+        </div>
+
+        <div className="flex flex-col sm:flex-row  gap-4 items-center">
+          <label htmlFor="filename"> File Name: </label>
+          <input
+            className="p-1 text-center rounded md:w-[256px]"
             value={fileName}
-            name="width"
+            name="filename"
             onInput={fileNameChangeHandler}
+          />
+        </div>
+
+        <div className="flex flex-col sm:flex-row  gap-4 items-center">
+          <label htmlFor="instruction"> Instruction: </label>
+          <input
+            className="p-1 text-center md:rounded w-[256px]"
+            value={instruction}
+            name="instruction"
+            onInput={instructionChangeHandler}
           />
         </div>
 
