@@ -32,3 +32,17 @@ export const getModels = async () => {
   const res = await openai.listModels();
   return res.data;
 };
+
+export const createChat = async (
+  input: string,
+  copies: number,
+  temperature: number
+) => {
+  const completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    n: Number(copies),
+    temperature: Number(temperature),
+    messages: [{ role: "user", content: input }],
+  });
+  return completion;
+};

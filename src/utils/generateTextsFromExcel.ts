@@ -18,18 +18,25 @@ export const generateTextFromExcel = async (
   await Promise.all(
     excel.map(async (item: any, index: any) => {
       try {
-        const generated = await generateTexts(
-          item["Rövid Leírás"],
-          count,
-          random
-        );
+        let fieldName = "Rövid Leírás";
+        const keys = Object.keys(item);
+        for (let i = 0; i < keys.length; i++) {
+          if (
+            keys[i].localeCompare(fieldName, "en", { sensitivity: "base" }) ===
+            0
+          ) {
+            fieldName = keys[i];
+            break;
+          }
+        }
+        const generated = await generateTexts(item[fieldName], count, random);
         let updated = item;
         const choices = generated.data.choices;
-        updated["TR"] = choices[0].text || "";
-        updated["TD"] = choices[1].text || "";
-        updated["TV"] = choices[2].text || "";
-        updated["TS"] = choices[3].text || "";
-        updated["PR"] = choices[4].text || "";
+        updated["TR"] = choices[0].message?.content || "";
+        updated["TD"] = choices[1].message?.content || "";
+        updated["TV"] = choices[2].message?.content || "";
+        updated["TS"] = choices[3].message?.content || "";
+        updated["PR"] = choices[4].message?.content || "";
         json[index] = updated;
         progress += 1;
         updateProgress({ current: progress, from: excel.length });
