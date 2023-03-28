@@ -74,8 +74,10 @@ export const generateTextFromExcel = async (
         let updated = item;
         const choices = generated.data.choices;
         for (let i = 0; i < count; i++) {
-          updated[`variant-${i + 1}`] =
-            choices[i].message?.content.trim() || "";
+          let string =
+            choices[i].message?.content.trim().replace(/^\s+|\s+$/gi, "\n") ||
+            "";
+          updated[`variant-${i + 1}`] = string;
         }
         json[index] = updated;
         progress += 1;
