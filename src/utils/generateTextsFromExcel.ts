@@ -7,14 +7,16 @@ const generateVariations = async (
   number: number,
   temperature: number,
   instruction: string,
-  iteration: number
+  iteration: number,
+  model: string
 ) => {
   try {
     let variations = await generateTexts(
       input,
       number,
       temperature,
-      instruction
+      instruction,
+      model
     );
     return variations;
   } catch (error) {
@@ -27,7 +29,8 @@ const generateVariations = async (
         number,
         temperature,
         instruction,
-        iteration + 1
+        iteration + 1,
+        model
       );
     }
   }
@@ -44,7 +47,8 @@ export const generateTextFromExcel = async (
     }>
   >,
   instruction: string,
-  excelFieldName: string
+  excelFieldName: string,
+  model: string
 ) => {
   let progress = 0;
   let json: any[] = [];
@@ -69,7 +73,8 @@ export const generateTextFromExcel = async (
           count,
           random,
           instruction,
-          1
+          1,
+          model
         );
         let updated = item;
         const choices = generated.data.choices;

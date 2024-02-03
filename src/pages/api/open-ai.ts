@@ -9,11 +9,12 @@ export const createEdits = async (
   input: string,
   instruction: string,
   copies: number,
-  temperature: number
+  temperature: number,
+  model: string
 ) => {
   const res = await openai.createEdit(
     {
-      model: "text-davinci-edit-001",
+      model: model,
       input,
       instruction,
       n: Number(copies),
@@ -36,10 +37,11 @@ export const getModels = async () => {
 export const createChat = async (
   input: string,
   copies: number,
-  temperature: number
+  temperature: number,
+  model: string
 ) => {
   const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
+    model: model,
     n: Number(copies),
     temperature: Number(temperature),
     messages: [{ role: "user", content: input }],

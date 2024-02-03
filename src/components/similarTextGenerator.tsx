@@ -17,6 +17,8 @@ const SimilatTextGenerator: FunctionComponent = () => {
   const [progress, setProgress] = useState({ current: 0, from: 0 });
   const [downloadExcel, setDownloadExcel] = useState({});
   const [downloadReady, setDownloadReady] = useState(false);
+  const models = ["gpt-4", "gpt-4-turbo-preview", "gpt-3.5-turbo"];
+  const [selectedModel, setSelectedModel] = useState(models[0]);
 
   const copiesChangeHandler = (newText: any) => {
     setCopies(newText.target.value);
@@ -37,6 +39,9 @@ const SimilatTextGenerator: FunctionComponent = () => {
   const randomChangeHandler = (newText: any) => {
     setRandom(newText.target.value);
   };
+  const modelSelect = (newText: any) => {
+    setSelectedModel(newText.target.value);
+  };
 
   const generateVariations = async () => {
     setDownloadReady(false);
@@ -47,7 +52,8 @@ const SimilatTextGenerator: FunctionComponent = () => {
       random,
       setProgress,
       instruction,
-      descriptionFieldName
+      descriptionFieldName,
+      selectedModel
     );
     setLoader(false);
     setDownloadExcel(json);
@@ -97,6 +103,17 @@ const SimilatTextGenerator: FunctionComponent = () => {
             onChange={readUploadFile}
           />
         </div>
+
+        <label className="flex flex-col md:flex-row gap-4 items-center">
+          Select language model:
+          <select name="colors" id="colorID" onChange={modelSelect}>
+            {models.map((model) => (
+              <option key={model} value={model}>
+                {model}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <div className="flex flex-col sm:flex-row  gap-4 items-center">
           <label htmlFor="copies"> Number of Copies</label>
