@@ -17,7 +17,13 @@ const SimilatTextGenerator: FunctionComponent = () => {
   const [progress, setProgress] = useState({ current: 0, from: 0 });
   const [downloadExcel, setDownloadExcel] = useState({});
   const [downloadReady, setDownloadReady] = useState(false);
-  const models = ["gpt-4", "gpt-4-turbo-preview", "gpt-3.5-turbo"];
+  const models = [
+    "gpt-4o",
+    "gpt-4-turbo",
+    "gpt-4",
+    "gpt-4-turbo",
+    "gpt-3.5-turbo",
+  ];
   const [selectedModel, setSelectedModel] = useState(models[0]);
 
   const copiesChangeHandler = (newText: any) => {
